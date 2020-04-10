@@ -231,6 +231,7 @@ public abstract class IdStrategy extends AbstractDescribableImpl<IdStrategy> imp
             } else {
                 StringBuilder buf = new StringBuilder(filename.length());
                 final char[] chars = filename.toCharArray();
+                OUTER:
                 for (int i = 0; i < chars.length; i++) {
                     char c = chars[i];
                     if ('a' <= c && c <= 'z') {
@@ -246,30 +247,16 @@ public abstract class IdStrategy extends AbstractDescribableImpl<IdStrategy> imp
                         }
                     } else if (c == '$') {
                         StringBuilder hex = new StringBuilder(4);
-                        i++;
-                        if (i < chars.length) {
-                            hex.append(chars[i]);
-                        } else {
-                            break;
+                        int j = i;
+                        while(i <= j+4) {
+                        	i++;
+                        	if (i < chars.length) {
+                        		hex.append(chars[i]);
+                        	} else {
+                        		break OUTER;
+                        	}
                         }
-                        i++;
-                        if (i < chars.length) {
-                            hex.append(chars[i]);
-                        } else {
-                            break;
-                        }
-                        i++;
-                        if (i < chars.length) {
-                            hex.append(chars[i]);
-                        } else {
-                            break;
-                        }
-                        i++;
-                        if (i < chars.length) {
-                            hex.append(chars[i]);
-                        } else {
-                            break;
-                        }
+                 
                         buf.append(Character.valueOf((char)Integer.parseInt(hex.toString(), 16)));
                     }
                 }
